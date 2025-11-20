@@ -1,7 +1,7 @@
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # Configurar logging
 logging.basicConfig(
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 # Token de tu bot
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ')
 
-def start(update: Update, context: CallbackContext) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
         [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
         [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
@@ -40,11 +40,11 @@ def start(update: Update, context: CallbackContext) -> None:
 👇 **Explora las opciones:**
     """
     
-    update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown')
+    await update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown')
 
-def button_handler(update: Update, context: CallbackContext) -> None:
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
-    query.answer()
+    await query.answer()
     
     if query.data == "quick_guide":
         guide_text = """
@@ -65,7 +65,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
 • Desbloquea nuevas áreas
 • Colecciona todos los rarecrows
         """
-        query.edit_message_text(guide_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+        await query.edit_message_text(guide_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
         ]))
     
@@ -87,7 +87,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
 • Mejora tus espantapájaros
 • Diversifica tu colección defensiva
         """
-        query.edit_message_text(defense_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+        await query.edit_message_text(defense_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
         ]))
     
@@ -109,7 +109,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
 🌟 **OBJETIVO:**
 Crear una comunidad positiva y colaborativa
         """
-        query.edit_message_text(rules_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+        await query.edit_message_text(rules_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
         ]))
     
@@ -137,21 +137,19 @@ Crear una comunidad positiva y colaborativa
 
 👇 **Explora las opciones:**
         """
-        query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
+        await query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
 
 def main():
-    # Crear updater y dispatcher
-    updater = Updater(TOKEN)
-    dispatcher = updater.dispatcher
+    # Crear aplicación
+    application = Application.builder().token(TOKEN).build()
     
     # Handlers
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CallbackQueryHandler(button_handler))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(button_handler))
     
     # Iniciar bot
     logger.info("🤖 Rarecrows Asistente ESP - ACTIVO 24/7!")
-    updater.start_polling()
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
