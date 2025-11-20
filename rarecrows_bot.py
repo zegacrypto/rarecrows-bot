@@ -1,7 +1,7 @@
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, MessageHandler, filters, ContextTypes, CallbackQueryHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 
 # Configurar logging
 logging.basicConfig(
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 # Token de tu bot
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ')
 
-async def welcome_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+def start(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
         [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
@@ -40,11 +40,11 @@ async def welcome_message(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 👇 **Explora las opciones:**
     """
     
-    await update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown')
+    update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown')
 
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+def button_handler(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
-    await query.answer()
+    query.answer()
     
     if query.data == "quick_guide":
         guide_text = """
@@ -65,7 +65,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 • Desbloquea nuevas áreas
 • Colecciona todos los rarecrows
         """
-        await query.edit_message_text(guide_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+        query.edit_message_text(guide_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
         ]))
     
@@ -87,7 +87,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 • Mejora tus espantapájaros
 • Diversifica tu colección defensiva
         """
-        await query.edit_message_text(defense_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+        query.edit_message_text(defense_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
         ]))
     
@@ -109,7 +109,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 🌟 **OBJETIVO:**
 Crear una comunidad positiva y colaborativa
         """
-        await query.edit_message_text(rules_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+        query.edit_message_text(rules_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
         ]))
     
@@ -137,19 +137,21 @@ Crear una comunidad positiva y colaborativa
 
 👇 **Explora las opciones:**
         """
-        await query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
+        query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
 
 def main():
-    # Crear aplicación
-    application = Application.builder().token(TOKEN).build()
+    # Crear updater y dispatcher
+    updater = Updater(TOKEN)
+    dispatcher = updater.dispatcher
     
     # Handlers
-    application.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_message))
-    application.add_handler(CallbackQueryHandler(button_handler))
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CallbackQueryHandler(button_handler))
     
     # Iniciar bot
     logger.info("🤖 Rarecrows Asistente ESP - ACTIVO 24/7!")
-    application.run_polling()
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
     main()
