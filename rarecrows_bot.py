@@ -1,15 +1,19 @@
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, MessageHandler, filters, CallbackContext, CallbackQueryHandler 
+from telegram.ext import Application, MessageHandler, filters, ContextTypes, CallbackQueryHandler
 
 # Configurar logging
-logging.basicConfig(level=logging.INFO) 
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
 
-# Token seguro desde variable de entorno
+# Token de tu bot
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ')
 
-async def welcome_message(update: Update, context: CallbackContext) -> None:
+async def welcome_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
         [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
         [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
@@ -38,7 +42,7 @@ async def welcome_message(update: Update, context: CallbackContext) -> None:
     
     await update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown')
 
-async def button_handler(update: Update, context: CallbackContext) -> None:
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
     
@@ -136,11 +140,15 @@ Crear una comunidad positiva y colaborativa
         await query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
 
 def main():
+    # Crear aplicación
     application = Application.builder().token(TOKEN).build()
+    
+    # Handlers
     application.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_message))
     application.add_handler(CallbackQueryHandler(button_handler))
     
-    print("🤖 Rarecrows Asistente ESP - ACTIVO 24/7!")
+    # Iniciar bot
+    logger.info("🤖 Rarecrows Asistente ESP - ACTIVO 24/7!")
     application.run_polling()
 
 if __name__ == '__main__':
