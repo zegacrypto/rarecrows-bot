@@ -7,7 +7,7 @@ from telegram.ext import Application, MessageHandler, filters, CallbackContext, 
 logging.basicConfig(level=logging.INFO) 
 
 # Token de tu bot
-TOKEN = "8332445670:AAHd7tXewjVkW9GfHWi5JbWqzZoqzCvCaxI" 
+TOKEN = "8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ" 
 
 async def welcome_message(update: Update, context: CallbackContext) -> None:
     keyboard = [
