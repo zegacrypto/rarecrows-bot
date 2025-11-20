@@ -6,19 +6,20 @@ from telegram.ext import Application, MessageHandler, filters, CallbackContext, 
 # Configurar logging
 logging.basicConfig(level=logging.INFO) 
 
-# Token de tu bot
+# Token seguro desde variable de entorno
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ')
+
 async def welcome_message(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
-        [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
-        [InlineKeyboardButton("📚 Guía Rápida", callback_data="quick_guide")],
-        [InlineKeyboardButton("🛡️ Tips Defensa", callback_data="defense_tips")],
-        [InlineKeyboardButton("📜 Reglas Grupo", callback_data="rules")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    welcome_text = """
+    keyboard = [
+        [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
+        [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
+        [InlineKeyboardButton("📚 Guía Rápida", callback_data="quick_guide")],
+        [InlineKeyboardButton("🛡️ Tips Defensa", callback_data="defense_tips")],
+        [InlineKeyboardButton("📜 Reglas Grupo", callback_data="rules")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    welcome_text = """
 ¡🌾 **Bienvenido/a a Rarecrows!** 🙌 
 
 **🔥 NOVEDAD IMPORTANTE:**
@@ -33,16 +34,16 @@ async def welcome_message(update: Update, context: CallbackContext) -> None:
 ¡Ventajas extras al empezar! 
 
 👇 **Explora las opciones:**
-    """
-    
-    await update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown') 
+    """
+    
+    await update.message.reply_text(welcome_text, reply_markup=reply_markup, parse_mode='Markdown')
 
 async def button_handler(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    await query.answer()
-    
-    if query.data == "quick_guide":
-        guide_text = """
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "quick_guide":
+        guide_text = """
 **📖 GUÍA BÁSICA OFICIAL - RARECROWS** 
 
 🌱 **SISTEMA DE CULTIVOS:**
@@ -59,13 +60,13 @@ async def button_handler(update: Update, context: CallbackContext) -> None:
 • Comienza con cultivos simples
 • Desbloquea nuevas áreas
 • Colecciona todos los rarecrows
-        """
-        await query.edit_message_text(guide_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
-        ]))
-    
-    elif query.data == "defense_tips":
-        defense_text = """
+        """
+        await query.edit_message_text(guide_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
+        ]))
+    
+    elif query.data == "defense_tips":
+        defense_text = """
 **🛡️ SISTEMA DE DEFENSA - RARECROWS** 
 
 ⚠️ **AMENAZAS:**
@@ -81,13 +82,13 @@ async def button_handler(update: Update, context: CallbackContext) -> None:
 • Revisa defensas frecuentemente
 • Mejora tus espantapájaros
 • Diversifica tu colección defensiva
-        """
-        await query.edit_message_text(defense_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
-        ]))
-    
-    elif query.data == "rules":
-        rules_text = """
+        """
+        await query.edit_message_text(defense_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
+        ]))
+    
+    elif query.data == "rules":
+        rules_text = """
 **📜 REGLAS DE LA COMUNIDAD RARECROWS** 
 
 ✅ **PERMITIDO:**
@@ -103,20 +104,20 @@ async def button_handler(update: Update, context: CallbackContext) -> None:
 
 🌟 **OBJETIVO:**
 Crear una comunidad positiva y colaborativa
-        """
-        await query.edit_message_text(rules_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
-        ]))
-    
-    elif query.data == "back_to_welcome":
-        keyboard = [
-            [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
-            [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
-            [InlineKeyboardButton("📚 Guía Rápida", callback_data="quick_guide")],
-            [InlineKeyboardButton("🛡️ Tips Defensa", callback_data="defense_tips")],
-            [InlineKeyboardButton("📜 Reglas Grupo", callback_data="rules")]
-        ]
-        welcome_text = """
+        """
+        await query.edit_message_text(rules_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("⬅️ Volver", callback_data="back_to_welcome")]
+        ]))
+    
+    elif query.data == "back_to_welcome":
+        keyboard = [
+            [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
+            [InlineKeyboardButton("🌐 JUGAR en Web", url="https://beta.rarecrows.io?ref=65990447765414")],
+            [InlineKeyboardButton("📚 Guía Rápida", callback_data="quick_guide")],
+            [InlineKeyboardButton("🛡️ Tips Defensa", callback_data="defense_tips")],
+            [InlineKeyboardButton("📜 Reglas Grupo", callback_data="rules")]
+        ]
+        welcome_text = """
 ¡🌾 **Bienvenido/a a Rarecrows!** 🙌 
 
 **🔥 NOVEDAD IMPORTANTE:**
@@ -131,16 +132,16 @@ Crear una comunidad positiva y colaborativa
 ¡Ventajas extras al empezar! 
 
 👇 **Explora las opciones:**
-        """
-        await query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown') 
+        """
+        await query.edit_message_text(welcome_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
 
 def main():
-    application = Application.builder().token(TOKEN).build()
-    application.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_message))
-    application.add_handler(CallbackQueryHandler(button_handler))
-    
-    print("🤖 Rarecrows Asistente ESP - ACTIVO 24/7!")
-    application.run_polling() 
+    application = Application.builder().token(TOKEN).build()
+    application.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome_message))
+    application.add_handler(CallbackQueryHandler(button_handler))
+    
+    print("🤖 Rarecrows Asistente ESP - ACTIVO 24/7!")
+    application.run_polling()
 
 if __name__ == '__main__':
-    main()
+    main()
