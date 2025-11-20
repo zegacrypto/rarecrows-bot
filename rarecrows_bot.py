@@ -7,8 +7,7 @@ from telegram.ext import Application, MessageHandler, filters, CallbackContext, 
 logging.basicConfig(level=logging.INFO) 
 
 # Token de tu bot
-TOKEN = "8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ" 
-
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8332445670:AAFt3E4bmGSAaegKAFiAqLBBoe566MOGkOQ')
 async def welcome_message(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton("🎮 JUGAR en Telegram", url="https://t.me/rarecrows_bot?start=ref_65990447765414")],
